@@ -1,6 +1,10 @@
 ---
 - name: Install NGINX and configure NGINX to serve static files and reverse Proxy for API
   hosts: all
+  vars:
+    app_config_file_name: site_config
+    app_name: app
+    index_file_name: index.html
   sudo: True
   tasks:
     - name: Install nginx
@@ -14,17 +18,17 @@
         path: /etc/nginx/sites-available/default
         state: absent
     - name: Copy nginx config file
-      copy: src=site_config dest=/etc/nginx/sites-available/site_config
+      copy: src={{ app_config_file_name }} dest=/etc/nginx/sites-available/{{ app_config_file_name }}
     - name: Create symlink for sites-enabled
       file:
-        src: /etc/nginx/sites-available/site_config
-        dest: /etc/nginx/sites-enabled/site_config
+        src: /etc/nginx/sites-available/{{ app_config_file_name }}
+        dest: /etc/nginx/sites-enabled/{{ app_config_file_name }}
         state: link
     - name: Create a directory to store static files of the app
       file: 
-        path: /var/www/html/app
+        path: /var/www/html/{{ app_name }}
         state: directory
     - name: Copy index.html to the app directory
-      copy: src=index.html dest=/var/www/html/app/index.html
+      copy: src={{ index_file_name }} dest=/var/www/html/{{ app_name }}/{{ index_file_name }}
     - name: Restart nginx
       service: name=nginx state=restarted
