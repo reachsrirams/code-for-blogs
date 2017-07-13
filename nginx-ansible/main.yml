@@ -3,7 +3,8 @@
   hosts: all
   vars:
     app_config_file_name: site_config
-    app_name: app
+    app_name: app2
+    app_api_endpoint: api
     index_file_name: index.html
   sudo: True
   tasks:
@@ -18,7 +19,9 @@
         path: /etc/nginx/sites-available/default
         state: absent
     - name: Copy nginx config file
-      copy: src={{ app_config_file_name }} dest=/etc/nginx/sites-available/{{ app_config_file_name }}
+      template: 
+        src: "{{ app_config_file_name }}"
+        dest: /etc/nginx/sites-available/{{ app_config_file_name }}
     - name: Create symlink for sites-enabled
       file:
         src: /etc/nginx/sites-available/{{ app_config_file_name }}
@@ -29,6 +32,8 @@
         path: /var/www/html/{{ app_name }}
         state: directory
     - name: Copy index.html to the app directory
-      copy: src={{ index_file_name }} dest=/var/www/html/{{ app_name }}/{{ index_file_name }}
+      template: 
+        src: "{{ index_file_name }}"
+        dest: /var/www/html/{{ app_name }}/{{ index_file_name }}
     - name: Restart nginx
       service: name=nginx state=restarted
