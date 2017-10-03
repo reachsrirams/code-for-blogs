@@ -1,0 +1,13 @@
+version: "3"
+services:
+    api:
+        build: api-container/
+        ports:
+         - 9090:9090
+    gui:
+        build: gui-container/
+        ports:
+         - 80:80
+        links:
+         - api:apiserver
+
