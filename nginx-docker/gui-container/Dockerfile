@@ -7,7 +7,7 @@
 FROM ubuntu
 
 # File Author / Maintainer
-MAINTAINER Maintaner Name
+MAINTAINER Sriram Subramanian
 
 # Update the repository
 RUN apt-get update
